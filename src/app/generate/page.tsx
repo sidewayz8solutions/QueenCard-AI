@@ -2,7 +2,7 @@
 
 import { createClient } from '@/lib/supabase/client'
 import { apiClient, LoRA } from '@/lib/api'
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import type { User } from '@supabase/supabase-js'
 
@@ -30,7 +30,13 @@ export default function GeneratePage() {
   const [numFrames, setNumFrames] = useState(25)
 
   const router = useRouter()
-  const supabase = createClient()
+  // Create a stable Supabase client that won't change across renders/HMR
+  const supabase = useMemo(() => createClient(), [])
+
+  // Guard against HMR/StrictMode double-invocations and component unmounts
+  const unmountedRef = useRef(false)
+  const pollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const pollingRef = useRef(false)
 
   useEffect(() => {
     const checkUser = async () => {
@@ -57,7 +63,14 @@ export default function GeneratePage() {
       setLoading(false)
     }
     checkUser()
-  }, [router, supabase.auth])
+    // Cleanup on unmount (HMR/route change)
+    return () => {
+      unmountedRef.current = true
+      if (pollTimeoutRef.current) clearTimeout(pollTimeoutRef.current)
+    }
+  // Intentionally run once on mount to avoid HMR-induced loops
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -68,10 +81,14 @@ export default function GeneratePage() {
   }
 
   const pollRunpodStatus = useCallback(async (jobId: string, runpodJobId: string, jobType: string) => {
+    if (pollingRef.current) return
+    pollingRef.current = true
+
     let attempts = 0
     const maxAttempts = 120 // 10 minutes for video
 
     const poll = async () => {
+      if (unmountedRef.current) return
       try {
         const rpStatus = await apiClient.getRunpodStatus(jobId, runpodJobId)
         setStatus(`Processing: ${rpStatus.status}`)
@@ -85,26 +102,30 @@ export default function GeneratePage() {
           }
           setGenerating(false)
           setStatus('Complete!')
+          pollingRef.current = false
           return
         }
 
         if (rpStatus.status === 'FAILED') {
           setStatus('Generation failed')
           setGenerating(false)
+          pollingRef.current = false
           return
         }
 
         attempts++
         if (attempts < maxAttempts) {
-          setTimeout(poll, 5000)
+          pollTimeoutRef.current = setTimeout(poll, 5000)
         } else {
           setStatus('Timeout')
           setGenerating(false)
+          pollingRef.current = false
         }
       } catch (error) {
         console.error('Polling error:', error)
         setStatus('Error')
         setGenerating(false)
+        pollingRef.current = false
       }
     }
 
