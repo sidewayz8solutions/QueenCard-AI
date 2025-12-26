@@ -1,0 +1,23 @@
+# PyTorch already in base image (runpod/pytorch:2.4.0)
+# Only install additional dependencies
+
+runpod
+boto3
+
+# Core ML dependencies
+huggingface_hub>=0.25.0
+transformers>=4.44.0
+accelerate>=0.33.0
+safetensors>=0.4.0
+peft>=0.12.0
+sentencepiece>=0.2.0
+ftfy>=6.2.0
+
+# Video processing
+imageio>=2.33.0
+imageio-ffmpeg>=0.4.9
+opencv-python-headless>=4.8.0
+
+# Diffusers with Wan 2.1 support (0.32.0+ has WanPipeline)
+diffusers>=0.32.0
+
