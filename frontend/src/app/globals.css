@@ -1,8 +1,12 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #000000;
+  --foreground: #e0ff00;
+  --neon-yellow: #e0ff00;
+  --neon-yellow-dim: #b3cc00;
+  --neon-glow: 0 0 10px #e0ff00, 0 0 20px #e0ff00, 0 0 30px #e0ff00, 0 0 40px #e0ff00;
+  --neon-glow-sm: 0 0 5px #e0ff00, 0 0 10px #e0ff00;
 }
 
 @theme inline {
@@ -12,15 +16,152 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+body {
+  background: #000000;
+  color: #e0ff00;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Neon glow text */
+.neon-text {
+  color: #e0ff00;
+  text-shadow: 0 0 5px #e0ff00, 0 0 10px #e0ff00, 0 0 20px #e0ff00, 0 0 40px #e0ff00;
+}
+
+.neon-text-sm {
+  color: #e0ff00;
+  text-shadow: 0 0 3px #e0ff00, 0 0 6px #e0ff00;
+}
+
+/* Neon border */
+.neon-border {
+  border: 1px solid #e0ff00;
+  box-shadow: 0 0 5px #e0ff00, 0 0 10px #e0ff00, inset 0 0 5px rgba(224, 255, 0, 0.1);
+}
+
+.neon-border-dim {
+  border: 1px solid rgba(224, 255, 0, 0.3);
+  box-shadow: 0 0 3px rgba(224, 255, 0, 0.3);
+}
+
+/* Neon button */
+.neon-button {
+  background: transparent;
+  border: 2px solid #e0ff00;
+  color: #e0ff00;
+  text-shadow: 0 0 5px #e0ff00;
+  box-shadow: 0 0 10px #e0ff00, 0 0 20px #e0ff00, inset 0 0 10px rgba(224, 255, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.neon-button:hover {
+  background: #e0ff00;
+  color: #000000;
+  text-shadow: none;
+  box-shadow: 0 0 20px #e0ff00, 0 0 40px #e0ff00, 0 0 60px #e0ff00;
+}
+
+.neon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.neon-button-solid {
+  background: #e0ff00;
+  border: none;
+  color: #000000;
+  font-weight: bold;
+  box-shadow: 0 0 15px #e0ff00, 0 0 30px #e0ff00;
+  transition: all 0.3s ease;
+}
+
+.neon-button-solid:hover {
+  box-shadow: 0 0 25px #e0ff00, 0 0 50px #e0ff00, 0 0 75px #e0ff00;
+  transform: scale(1.02);
+}
+
+/* Neon input */
+.neon-input {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(224, 255, 0, 0.3);
+  color: #e0ff00;
+  transition: all 0.3s ease;
+}
+
+.neon-input:focus {
+  border-color: #e0ff00;
+  box-shadow: 0 0 10px #e0ff00, inset 0 0 5px rgba(224, 255, 0, 0.1);
+  outline: none;
+}
+
+.neon-input::placeholder {
+  color: rgba(224, 255, 0, 0.4);
+}
+
+/* Animated pulse glow */
+@keyframes neon-pulse {
+  0%, 100% {
+    box-shadow: 0 0 5px #e0ff00, 0 0 10px #e0ff00, 0 0 20px #e0ff00;
+  }
+  50% {
+    box-shadow: 0 0 10px #e0ff00, 0 0 20px #e0ff00, 0 0 40px #e0ff00, 0 0 60px #e0ff00;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+.neon-pulse {
+  animation: neon-pulse 2s ease-in-out infinite;
+}
+
+/* Card with neon effect */
+.neon-card {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(224, 255, 0, 0.2);
+  box-shadow: 0 0 10px rgba(224, 255, 0, 0.1);
+}
+
+.neon-card:hover {
+  border-color: rgba(224, 255, 0, 0.5);
+  box-shadow: 0 0 20px rgba(224, 255, 0, 0.2);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e0ff00;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #b3cc00;
+}
+
+/* Range slider */
+input[type="range"] {
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+input[type="range"]::-webkit-slider-track {
+  height: 4px;
+  background: rgba(224, 255, 0, 0.2);
+  border-radius: 2px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #e0ff00;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px #e0ff00;
+  margin-top: -6px;
 }

@@ -1,22 +1,32 @@
 #!/usr/bin/env python3
 """
-Download popular NSFW LoRAs from CivitAI and upload to R2.
-Run: python scripts/download_loras.py
+Download SD1.5 IMAGE LoRAs from CivitAI (for image generation, NOT video) and upload to R2.
+Run: python scripts/download_image_loras.py
+
+NOTE: These are for SD1.5 image generation. For Wan video LoRAs, use download_video_loras.py
 """
 
 import os
+import uuid
 import requests
 import boto3
 from pathlib import Path
-from dotenv import load_dotenv
 
-# Load .env from api directory
-load_dotenv("api/.env")
+# Load .env manually (avoid dotenv issues)
+env_path = Path(__file__).parent.parent / ".env"
+if env_path.exists():
+    with open(env_path) as f:
+        for line in f:
+            if "=" in line and not line.startswith("#"):
+                key, val = line.strip().split("=", 1)
+                os.environ.setdefault(key, val)
 
 R2_ENDPOINT = os.getenv("R2_ENDPOINT")
 R2_ACCESS_KEY_ID = os.getenv("R2_ACCESS_KEY_ID")
 R2_SECRET_ACCESS_KEY = os.getenv("R2_SECRET_ACCESS_KEY")
 R2_BUCKET_NAME = os.getenv("R2_BUCKET_NAME")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 
 # CivitAI version IDs for popular NSFW LoRAs (verified working)
 # Format: (slug, civitai_version_id, filename)
@@ -100,7 +110,7 @@ def download_from_civitai(version_id: int, filename: str) -> Path:
 def upload_to_r2(local_path: Path, r2_key: str):
     """Upload a file to R2"""
     s3 = get_s3_client()
-    
+
     print(f"  Uploading to R2: {r2_key}")
     s3.upload_file(
         str(local_path),
@@ -109,6 +119,33 @@ def upload_to_r2(local_path: Path, r2_key: str):
         ExtraArgs={"ContentType": "application/octet-stream"}
     )
     print(f"  ✓ Uploaded: {r2_key}")
+
+
+def register_lora_in_supabase(lora_data: dict):
+    """Register LoRA in Supabase database so it appears in frontend"""
+    if not SUPABASE_URL or not SUPABASE_SERVICE_ROLE_KEY:
+        print("  ⚠ Skipping DB registration (no Supabase credentials)")
+        return False
+
+    url = f"{SUPABASE_URL}/rest/v1/loras"
+    headers = {
+        "apikey": SUPABASE_SERVICE_ROLE_KEY,
+        "Authorization": f"Bearer {SUPABASE_SERVICE_ROLE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "resolution=merge-duplicates"  # Upsert by slug
+    }
+
+    # Ensure required fields
+    lora_data["is_public"] = True
+    lora_data["id"] = lora_data.get("id", str(uuid.uuid4()))
+
+    resp = requests.post(url, headers=headers, json=[lora_data])
+    if resp.status_code not in (200, 201):
+        print(f"  ⚠ DB registration failed: {resp.text}")
+        return False
+
+    print(f"  ✓ Registered in Supabase (is_public=true)")
+    return True
 
 
 def main():
@@ -128,30 +165,63 @@ def main():
     print(f"Endpoint: {R2_ENDPOINT}")
     print()
     
+    # Determine category from slug
+    def get_category(slug):
+        if slug in ["cumshot", "ahegao"]:
+            return "effect"
+        elif slug in ["doggystyle", "cowgirl", "blowjob", "spread-legs"]:
+            return "pose"
+        elif slug in ["big-breasts"]:
+            return "body"
+        elif slug in ["lingerie", "latex", "maid-outfit"]:
+            return "clothing"
+        elif slug in ["oiled-body"]:
+            return "style"
+        elif slug in ["bondage", "feet"]:
+            return "fetish"
+        return "other"
+
     # Download and upload each LoRA
     for slug, version_id, filename in LORAS:
         r2_key = f"loras/{filename}"
         print(f"\n[{slug}]")
-        
+
         try:
             # Check if already exists in R2
             s3 = get_s3_client()
+            already_exists = False
             try:
                 s3.head_object(Bucket=R2_BUCKET_NAME, Key=r2_key)
-                print(f"  Already exists in R2, skipping...")
-                continue
+                print(f"  Already exists in R2")
+                already_exists = True
             except:
                 pass  # Doesn't exist, proceed to download
-            
-            # Download from CivitAI
-            local_path = download_from_civitai(version_id, filename)
-            
-            # Upload to R2
-            upload_to_r2(local_path, r2_key)
-            
-            # Cleanup
-            local_path.unlink()
-            
+
+            if not already_exists:
+                # Download from CivitAI
+                local_path = download_from_civitai(version_id, filename)
+
+                # Upload to R2
+                upload_to_r2(local_path, r2_key)
+
+                # Cleanup
+                local_path.unlink()
+
+            # Register in Supabase (always, to ensure DB is in sync)
+            lora_meta = {
+                "name": slug.replace("-", " ").title(),
+                "slug": slug,
+                "description": f"SD 1.5 LoRA for {slug.replace('-', ' ')}",
+                "r2_key": r2_key,
+                "category": get_category(slug),
+                "tags": [get_category(slug), "image", "sd15", "nsfw"],
+                "trigger_words": [slug.replace("-", " ")],
+                "base_model": "sd15",
+                "is_nsfw": True,
+                "is_public": True,
+            }
+            register_lora_in_supabase(lora_meta)
+
         except Exception as e:
             print(f"  ✗ Error: {e}")
             continue

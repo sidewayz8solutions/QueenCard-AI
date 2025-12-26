@@ -52,14 +52,20 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-900 via-black to-pink-900">
-      <div className="max-w-md w-full mx-4">
-        <div className="bg-gray-900/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-purple-500/20">
+    <div className="min-h-screen flex items-center justify-center bg-black">
+      {/* Background glow effects */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#e0ff00] opacity-5 blur-[100px] rounded-full" />
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-[#e0ff00] opacity-5 blur-[80px] rounded-full" />
+      </div>
+
+      <div className="max-w-md w-full mx-4 relative z-10">
+        <div className="neon-card rounded-2xl p-8">
           <div className="text-center mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-              QueenCard AI
+            <h1 className="text-5xl font-bold neon-text mb-2">
+              QueenCard
             </h1>
-            <p className="text-gray-400 mt-2">AI-powered image generation</p>
+            <p className="text-[#e0ff00]/60 text-lg">AI Video Generation</p>
           </div>
 
           {error && (
@@ -69,33 +75,33 @@ export default function LoginPage() {
           )}
 
           {message && (
-            <div className="bg-green-500/10 border border-green-500/50 text-green-400 px-4 py-3 rounded-lg mb-6">
+            <div className="bg-[#e0ff00]/10 border border-[#e0ff00]/50 text-[#e0ff00] px-4 py-3 rounded-lg mb-6">
               {message}
             </div>
           )}
 
           <form onSubmit={handleEmailAuth} className="space-y-4">
             <div>
-              <label className="block text-gray-400 text-sm mb-2">Email</label>
+              <label className="block text-[#e0ff00]/70 text-sm mb-2">Email</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:border-purple-500 focus:outline-none"
+                className="neon-input w-full rounded-lg px-4 py-3"
                 placeholder="you@example.com"
               />
             </div>
 
             <div>
-              <label className="block text-gray-400 text-sm mb-2">Password</label>
+              <label className="block text-[#e0ff00]/70 text-sm mb-2">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={6}
-                className="w-full bg-gray-800 text-white rounded-lg px-4 py-3 border border-gray-700 focus:border-purple-500 focus:outline-none"
+                className="neon-input w-full rounded-lg px-4 py-3"
                 placeholder="••••••••"
               />
             </div>
@@ -103,7 +109,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold py-3 px-4 rounded-lg hover:from-purple-500 hover:to-pink-500 transition disabled:opacity-50"
+              className="neon-button-solid w-full py-4 rounded-lg text-lg mt-6"
             >
               {loading ? 'Loading...' : isSignUp ? 'Sign Up' : 'Sign In'}
             </button>
@@ -112,18 +118,17 @@ export default function LoginPage() {
           <div className="mt-6 text-center">
             <button
               onClick={() => setIsSignUp(!isSignUp)}
-              className="text-purple-400 hover:text-purple-300 text-sm"
+              className="text-[#e0ff00]/70 hover:text-[#e0ff00] text-sm transition"
             >
               {isSignUp ? 'Already have an account? Sign In' : "Don't have an account? Sign Up"}
             </button>
           </div>
 
-          <p className="text-gray-500 text-sm text-center mt-6">
-            By signing in, you agree to our Terms of Service and Privacy Policy
+          <p className="text-[#e0ff00]/30 text-xs text-center mt-8">
+            18+ only. By signing in, you agree to our Terms of Service.
           </p>
         </div>
       </div>
     </div>
   )
 }
-

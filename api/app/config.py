@@ -21,7 +21,8 @@ class Settings(BaseSettings):
     RUNPOD_ENDPOINT_ID: str
 
     class Config:
-        env_file = ".env"
+        env_file = "../.env"
+        extra = "ignore"
 
 settings = Settings()
 

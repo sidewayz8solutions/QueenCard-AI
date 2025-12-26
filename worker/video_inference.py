@@ -26,8 +26,25 @@ WAN_MODEL_T2V = os.environ.get("WAN_MODEL_T2V", "NSFW-API/NSFW_Wan_1.3b")
 WAN_MODEL_I2V = os.environ.get("WAN_MODEL_I2V", "Wan-Video/Wan2.1-I2V-1.3B-480P")
 
 # LoRA registry - can store LoRAs in R2
+# Video LoRA registry - Wan 2.1/2.2 compatible video LoRAs stored in R2
+# Run scripts/download_video_loras.py to populate these in R2
 LORA_REGISTRY = {
-    # "lora-name": "r2-key-to-lora.safetensors"
+    # === GENERAL NSFW (CubeyAI) ===
+    # Trigger: "nsfwsks" + descriptive prompting
+    "nsfw-22-high": "video-loras/NSFW-22-H-e8.safetensors",
+    "nsfw-22-low": "video-loras/NSFW-22-L-e8.safetensors",
+    "nsfw-21": "video-loras/wan-nsfw-e14-fixed.safetensors",
+    
+    # === CUMSHOT LoRAs ===
+    # Trigger: "cum shoots out of the man's penis and lands on her face/chest"
+    "cumshot-22-high": "video-loras/wan2.2_highnoise_cumshot_v.1.0.safetensors",
+    "cumshot-22-low": "video-loras/wan2.2_lownoise_cumshot_v1.0.safetensors",
+    "cumshot-21-t2v": "video-loras/wan_cumshot.safetensors",
+    "cumshot-21-i2v": "video-loras/wan_cumshot_i2v.safetensors",
+    
+    # === FACIAL / BUKKAKE ===
+    # Trigger: "thick whitish translucent semen, cum on face"
+    "facial-21": "video-loras/facials_epoch_50.safetensors",
 }
 
 
