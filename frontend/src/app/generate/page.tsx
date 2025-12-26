@@ -145,12 +145,15 @@ export default function GeneratePage() {
         params.motion_bucket_id = motionStrength
         params.num_frames = numFrames
         params.fps = 16
+        // 720p resolution for Wan 2.1 14B model
+        params.width = 1280
+        params.height = 720
       }
 
       const { job_id } = await apiClient.createJob({
         prompt,
         job_type: jobType,
-        model_name: jobType === 'img2vid' ? 'wan-i2v' : 'realistic-vision-v5',
+        model_name: jobType === 'img2vid' ? 'wan-i2v-720p' : 'realistic-vision-v5',
         lora_names: selectedLoras,
         params,
       })
