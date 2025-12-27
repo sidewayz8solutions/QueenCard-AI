@@ -30,8 +30,9 @@ _loaded_loras = []
 # Wan 2.1 model configuration
 # Using 14B parameter models for higher quality 720p output
 # Note: 14B models require ~40GB+ VRAM - use A100 or H100 on RunPod
-WAN_MODEL_T2V = os.environ.get("WAN_MODEL_T2V", "Wan-AI/Wan2.1-T2V-14B-720P")
-WAN_MODEL_I2V = os.environ.get("WAN_MODEL_I2V", "Wan-AI/Wan2.1-I2V-14B-720P")
+# IMPORTANT: Must use "-Diffusers" suffix for diffusers library compatibility
+WAN_MODEL_T2V = os.environ.get("WAN_MODEL_T2V", "Wan-AI/Wan2.1-T2V-14B-Diffusers")
+WAN_MODEL_I2V = os.environ.get("WAN_MODEL_I2V", "Wan-AI/Wan2.1-I2V-14B-720P-Diffusers")
 
 # LoRA registry - can store LoRAs in R2
 # Video LoRA registry - Wan 2.1/2.2 compatible video LoRAs stored in R2
