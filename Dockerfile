@@ -4,7 +4,7 @@
 # Build: docker build -t queencard-worker .
 # Push to Docker Hub/GHCR, then deploy on RunPod Serverless
 
-FROM runpod/pytorch:2.4.0-py3.11-cuda12.4.1-devel-ubuntu22.04
+FROM runpod/pytorch:2.5.1-py3.11-cuda12.4.1-devel-ubuntu22.04
 
 # Prevent Python from buffering stdout/stderr
 ENV PYTHONUNBUFFERED=1
