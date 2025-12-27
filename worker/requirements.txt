@@ -2,6 +2,7 @@
 # runpod is installed separately in Dockerfile to ensure it's available
 
 boto3
+hf_transfer
 
 # Core ML dependencies
 huggingface_hub>=0.25.0
