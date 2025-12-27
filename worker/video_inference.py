@@ -38,21 +38,26 @@ WAN_MODEL_I2V = os.environ.get("WAN_MODEL_I2V", "Wan-AI/Wan2.1-I2V-14B-720P-Diff
 # Video LoRA registry - Wan 2.1/2.2 compatible video LoRAs stored in R2
 # Run scripts/download_video_loras.py to populate these in R2
 LORA_REGISTRY = {
+    # === CUMSHOT / FACIAL for Wan 2.2 I2V (BEST) ===
+    # Model: https://civitai.com/models/1962545 (Civitaiwolfxx)
+    # Trigger: "cum shoots out of the penis and lands on her face"
+    "cumfacial-22-high": "video-loras/Wan22_CumV2_High.safetensors",
+    "cumfacial-22-low": "video-loras/Wan22_CumV2_Low.safetensors",
+
+    # Model: https://civitai.com/models/1922973 (K3NK - F4C3SPL4SH)
+    # Trigger: "f4c3spl4sh" + descriptive cumshot prompting
+    "f4c3spl4sh-low": "video-loras/wan22-f4c3spl4sh-154epoc-low-k3nk.safetensors",
+    "f4c3spl4sh-high": "video-loras/wan22-f4c3spl4sh-100epoc-high-k3nk.safetensors",
+
     # === GENERAL NSFW (CubeyAI) ===
     # Trigger: "nsfwsks" + descriptive prompting
     "nsfw-22-high": "video-loras/NSFW-22-H-e8.safetensors",
     "nsfw-22-low": "video-loras/NSFW-22-L-e8.safetensors",
     "nsfw-21": "video-loras/wan-nsfw-e14-fixed.safetensors",
-    
-    # === CUMSHOT LoRAs ===
-    # Trigger: "cum shoots out of the man's penis and lands on her face/chest"
-    "cumshot-22-high": "video-loras/wan2.2_highnoise_cumshot_v.1.0.safetensors",
-    "cumshot-22-low": "video-loras/wan2.2_lownoise_cumshot_v1.0.safetensors",
+
+    # === OLDER Wan 2.1 LoRAs ===
     "cumshot-21-t2v": "video-loras/wan_cumshot.safetensors",
     "cumshot-21-i2v": "video-loras/wan_cumshot_i2v.safetensors",
-    
-    # === FACIAL / BUKKAKE ===
-    # Trigger: "thick whitish translucent semen, cum on face"
     "facial-21": "video-loras/facials_epoch_50.safetensors",
 }
 

@@ -38,28 +38,36 @@ SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 # Format: (slug, civitai_version_id, filename, expected_size_mb, trigger_words)
 
 VIDEO_LORAS = [
+    # === CUMSHOT / FACIAL LoRAs for Wan 2.2 I2V ===
+
+    # Model: https://civitai.com/models/1962545 (Civitaiwolfxx)
+    # Best cumshot LoRA for Wan 2.2 I2V - highly rated
+    ("cumfacial-22-high", "2460386", "Wan22_CumV2_High.safetensors", 293,
+     "cum shoots out of the penis and lands on her face, a woman is kneeling in front of a man, big cum load, she has her mouth open"),
+    ("cumfacial-22-low", "2460428", "Wan22_CumV2_Low.safetensors", 293,
+     "cum pulses out of the penis and onto her face and tongue and mouth, cum oozes out"),
+
+    # Model: https://civitai.com/models/1922973 (K3NK - F4C3SPL4SH)
+    # Very popular cumshot LoRA - 66k downloads
+    ("f4c3spl4sh-low", "2178869", "wan22-f4c3spl4sh-154epoc-low-k3nk.safetensors", 293,
+     "f4c3spl4sh, cumshot on face, semen stream directed at mouth"),
+    ("f4c3spl4sh-high", "2176450", "wan22-f4c3spl4sh-100epoc-high-k3nk.safetensors", 305,
+     "f4c3spl4sh, cumshot on face, forceful ejaculation"),
+
     # === GENERAL NSFW (CubeyAI) ===
     # Model: https://civitai.com/models/1307155
     ("nsfw-22-high", "2073605", "NSFW-22-H-e8.safetensors", 585,
      "nsfwsks, descriptive prompting for sex acts"),
     ("nsfw-22-low", "2083303", "NSFW-22-L-e8.safetensors", 585,
      "nsfwsks, descriptive prompting for sex acts"),
+
+    # === OLDER Wan 2.1 LoRAs (kept for compatibility) ===
     ("nsfw-21", "1475095", "wan-nsfw-e14-fixed.safetensors", 585,
      "nsfwsks, missionary, doggy, cowgirl, blowjob"),
-    
-    # === CUMSHOT LoRAs (dtwr434) ===
-    # Model: https://civitai.com/models/1350447
-    ("cumshot-22-high", "2077123", "wan2.2_highnoise_cumshot_v.1.0.safetensors", 293,
-     "cum shoots out of the man's penis and lands on her face/chest/pussy"),
-    ("cumshot-22-low", "2077119", "wan2.2_lownoise_cumshot_v1.0.safetensors", 293,
-     "cum shoots out of the man's penis and lands on her face/chest/pussy"),
     ("cumshot-21-t2v", "1525363", "wan_cumshot.safetensors", 293,
      "cum shoots out, man stroking his penis"),
     ("cumshot-21-i2v", "1602715", "wan_cumshot_i2v.safetensors", 343,
      "cum shoots from off screen, I2V cumshot"),
-    
-    # === FACIAL / BUKKAKE LoRA (aipinups69) ===
-    # Model: https://civitai.com/models/1364982
     ("facial-21", "1542133", "facials_epoch_50.safetensors", 293,
      "thick whitish translucent semen, cum on face, bukkake"),
 ]
