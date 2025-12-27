@@ -1,7 +1,6 @@
-# PyTorch already in base image (runpod/pytorch:2.4.0)
-# Only install additional dependencies
+# PyTorch already in base image (runpod/pytorch)
+# runpod is installed separately in Dockerfile to ensure it's available
 
-runpod
 boto3
 
 # Core ML dependencies

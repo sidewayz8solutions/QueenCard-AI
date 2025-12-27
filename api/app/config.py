@@ -1,9 +1,25 @@
 from pydantic_settings import BaseSettings
 from pydantic import Field
 from pathlib import Path
+import os
 
 # Get the project root directory (2 levels up from this file)
+# Also check if we're running from api/ or project root
 PROJECT_ROOT = Path(__file__).parent.parent.parent
+API_ROOT = Path(__file__).parent.parent
+
+# Find .env file - check multiple locations
+def find_env_file():
+    candidates = [
+        PROJECT_ROOT / ".env",
+        API_ROOT / ".env",
+        Path.cwd() / ".env",
+        Path.cwd().parent / ".env",
+    ]
+    for candidate in candidates:
+        if candidate.exists():
+            return str(candidate)
+    return str(PROJECT_ROOT / ".env")
 
 class Settings(BaseSettings):
     APP_ENV: str = "dev"
@@ -26,7 +42,7 @@ class Settings(BaseSettings):
     RUNPOD_ENDPOINT_ID: str
 
     class Config:
-        env_file = str(PROJECT_ROOT / ".env")
+        env_file = find_env_file()
         extra = "ignore"
 
 settings = Settings()

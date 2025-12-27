@@ -29,15 +29,24 @@ RUN mkdir -p /runpod-volume/cache/huggingface \
     && mkdir -p /tmp/loras \
     && mkdir -p /tmp/outputs
 
-# Copy and install Python dependencies first (better layer caching)
+# Install runpod FIRST and verify - use explicit python3 -m pip
+# Cache bust: v2
+RUN python3 -m pip install --no-cache-dir --upgrade pip && \
+    python3 -m pip install --no-cache-dir runpod==1.7.9 && \
+    python3 -c "import runpod; print(f'runpod version: {runpod.__version__}')"
+
+# Copy and install other Python dependencies
 COPY worker/requirements.txt .
-RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir runpod>=1.6.0 \
-    && pip install --no-cache-dir -r requirements.txt \
-    && pip list | grep -i runpod
+RUN python3 -m pip install --no-cache-dir -r requirements.txt
+
+# Verify runpod is still there after installing other deps
+RUN python3 -c "import runpod; print(f'runpod verified: {runpod.__version__}')"
 
 # Copy worker code
 COPY worker/*.py .
+
+# Final verification
+RUN python3 -c "import runpod; print('FINAL CHECK - runpod OK')"
 
 # RunPod handler entrypoint
 CMD ["python3", "-u", "worker.py"]
