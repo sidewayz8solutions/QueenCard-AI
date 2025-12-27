@@ -23,11 +23,27 @@ jobs:
     steps:
       - name: Free disk space
         run: |
+          # Remove large unnecessary packages
           sudo rm -rf /usr/share/dotnet
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /opt/ghc
           sudo rm -rf /opt/hostedtoolcache/CodeQL
+          sudo rm -rf /opt/hostedtoolcache/Java*
+          sudo rm -rf /opt/hostedtoolcache/Ruby*
+          sudo rm -rf /opt/hostedtoolcache/Python*
+          sudo rm -rf /opt/hostedtoolcache/go
+          sudo rm -rf /opt/hostedtoolcache/node
+          sudo rm -rf /usr/local/share/boost
+          sudo rm -rf /usr/share/swift
+          sudo rm -rf /usr/local/.ghcup
+          # Remove large apt packages
+          sudo apt-get remove -y '^dotnet-.*' '^llvm-.*' 'php.*' azure-cli google-chrome-stable firefox powershell mono-devel || true
+          sudo apt-get autoremove -y
+          sudo apt-get clean
+          # Clean docker
           sudo docker image prune --all --force
+          sudo docker system prune -af
+          # Show available space
           df -h
 
       - name: Checkout repository
