@@ -28,8 +28,8 @@ _wan_i2v_pipeline = None
 _loaded_loras = []
 
 # Wan 2.1 model configuration
-# Using 14B parameter models for higher quality 720p output
-# Note: 14B models require ~40GB+ VRAM - use A100 or H100 on RunPod
+# Using 14B models for high quality 720p output
+# Requires: A100 80GB+ GPU and 150GB+ disk space
 # IMPORTANT: Must use "-Diffusers" suffix for diffusers library compatibility
 WAN_MODEL_T2V = os.environ.get("WAN_MODEL_T2V", "Wan-AI/Wan2.1-T2V-14B-Diffusers")
 WAN_MODEL_I2V = os.environ.get("WAN_MODEL_I2V", "Wan-AI/Wan2.1-I2V-14B-720P-Diffusers")
