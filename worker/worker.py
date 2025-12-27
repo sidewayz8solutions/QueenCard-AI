@@ -59,7 +59,7 @@ def handler(event):
         print(f"Job {job_id} completed with {len(results)} outputs")
 
         return {
-            "status": "completed",
+            "status": "success",
             "job_id": job_id,
             "job_type": job_type,
             "outputs": results

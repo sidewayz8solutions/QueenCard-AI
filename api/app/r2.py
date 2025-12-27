@@ -1,4 +1,5 @@
 import boto3
+import base64
 from botocore.config import Config
 from .config import settings
 
@@ -27,4 +28,17 @@ def presign_get(*, key: str, expires_seconds: int = 1800) -> str:
         Params={"Bucket": settings.R2_BUCKET_NAME, "Key": key},
         ExpiresIn=expires_seconds,
     )
+
+def upload_base64(*, key: str, data: str, content_type: str = "video/mp4") -> str:
+    """Upload base64-encoded data to R2 and return the key."""
+    s3 = r2_client()
+    # Decode base64 data
+    binary_data = base64.b64decode(data)
+    s3.put_object(
+        Bucket=settings.R2_BUCKET_NAME,
+        Key=key,
+        Body=binary_data,
+        ContentType=content_type,
+    )
+    return key
 
