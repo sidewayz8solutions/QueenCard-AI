@@ -32,7 +32,9 @@ RUN mkdir -p /runpod-volume/cache/huggingface \
 # Copy and install Python dependencies first (better layer caching)
 COPY worker/requirements.txt .
 RUN pip install --no-cache-dir --upgrade pip \
-    && pip install --no-cache-dir -r requirements.txt
+    && pip install --no-cache-dir runpod \
+    && pip install --no-cache-dir -r requirements.txt \
+    && python3 -c "import runpod; print(f'runpod version: {runpod.__version__}')"
 
 # Copy worker code
 COPY worker/*.py .
